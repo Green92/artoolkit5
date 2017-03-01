@@ -42,7 +42,7 @@
 #include "date_time.h"
 #include <fstream>
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
 #define __PRETTY_FUNCTION__ __FUNCSIG__
 #endif
 

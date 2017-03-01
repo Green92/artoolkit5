@@ -77,7 +77,7 @@ extern "C" {
 // Also, define attribute to produce a tightly packed structure (i.e. all structures
 // byte-aligned.)
 // I don't know how to do this in compilers other than GCC at the moment.
-#if defined(__GNUC__)
+#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__MINGW64__)
 #  if defined(__BIG_ENDIAN__) 
 #    define EDEN_BIGENDIAN  // Most Significant Byte has greatest address in memory.
 #  endif
@@ -153,7 +153,7 @@ extern "C" {
 #  define EDEN_INLINE_C
 
 // Microsoft C++ on Windows.
-#elif defined(_MSC_VER)		
+#elif defined(_MSC_VER)	|| defined(__MINGW32__) && defined(__MINGW64__)	
 #  include <windows.h>	// Is this correct?
 #  undef EDEN_BIGENDIAN	// Least Significant Byte is highest in memory.
 #  define EDEN_HAVE_LIBJPEG

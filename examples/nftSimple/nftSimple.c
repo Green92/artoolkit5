@@ -56,11 +56,11 @@
 //	Includes
 // ============================================================================
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
 #  include <windows.h>
 #endif
 #include <stdio.h>
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
 #  define snprintf _snprintf
 #endif
 #include <string.h>
@@ -162,7 +162,7 @@ int main(int argc, char** argv)
 	// Video setup.
 	//
     
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
 	CoInitialize(NULL);
 #endif
     
@@ -487,7 +487,7 @@ static void cleanup(void)
     // Camera cleanup.
 	arVideoCapStop();
 	arVideoClose();
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
 	CoUninitialize();
 #endif
 }

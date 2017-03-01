@@ -57,7 +57,7 @@
 extern "C" {
 #endif
     
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
 #  ifdef LIBAROSG_EXPORTS
 #    define AR_DLL_API __declspec(dllexport)
 #  else

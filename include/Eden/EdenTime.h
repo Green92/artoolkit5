@@ -66,9 +66,9 @@ extern "C" {
 #  include <Eden/Eden.h>
 #endif
 
-#if defined(EDEN_UNIX)
+#if defined(EDEN_UNIX) || defined(__MINGW32__) && defined(__MINGW64__)
 #  include <sys/time.h>					// struct timespec, struct timeval, gettimeofday()
-#else
+#elif !defined(__MINGW32__) && !defined(__MINGW64__)
 #  ifndef PTHREAD_H						// pthreads_win32 also defines struct timespec.
 struct timespec {
 	long tv_sec;

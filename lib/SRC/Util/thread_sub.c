@@ -42,8 +42,11 @@
  */
 
 #include <AR/ar.h>
-#ifndef _WIN32
+#if !defined(_WIN32) || defined(__MINGW64__) && defined(__MINGW32__)
 #  include <unistd.h>
+#endif
+#if defined(_WIN32) && defined(__MINGW64__) && defined(__MINGW32__)
+#  include <windows.h>
 #endif
 #include <stdio.h>
 #include <stdlib.h>
@@ -132,7 +135,8 @@ void *threadGetArg( THREAD_HANDLE_T *flag )
 //
 
 // A construct to manage the difference in start routine signature between pthreads and windows threads.
-#if defined(_WIN32) && !defined(_WINRT)
+#if defined(_WIN32) && !defined(_WINRT) && !defined(__MINGW64__) && !defined(__MINGW32__)
+
 struct start_routine_proxy_arg {
 	void *(*start_routine)(THREAD_HANDLE_T*);
 	void *arg;
@@ -169,7 +173,8 @@ THREAD_HANDLE_T *threadInit( int ID, void *arg, void *(*start_routine)(THREAD_HA
     pthread_attr_setdetachstate(&attr, 1); // Preclude the need to do pthread_join on the thread after it exits.
     err = pthread_create(&thread, &attr, (void *(*)(void*))start_routine, flag);
     pthread_attr_destroy(&attr);
-#elif defined(_WIN32)
+#elif defined(_WIN32) && !defined(__MINGW64__) && !defined(__MINGW32__)
+
 #  ifdef _WINRT
     err = arCreateDetachedThreadWinRT(start_routine, flag);
 #  else
@@ -253,7 +258,7 @@ int threadWaitQuit( THREAD_HANDLE_T *flag )
 
 int threadGetCPU(void)
 {
-#ifdef _WIN32
+#if defined(_WIN32) //&& !defined(__MINGW64__) && !defined(__MINGW32__)
     SYSTEM_INFO   info;
 
 #  ifndef _WINRT

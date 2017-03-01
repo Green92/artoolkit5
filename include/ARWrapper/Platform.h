@@ -40,7 +40,7 @@
 
 // Determine the platform on which the code is being built
 
-#if defined _WIN32 || defined _WIN64
+#if defined _WIN32 || defined _WIN64 && !defined(__MINGW32__) && !defined(__MINGW64__)
 
 // Include Windows API.
 #  ifndef WIN32_LEAN_AND_MEAN
@@ -83,7 +83,7 @@
 
 #  define TARGET_PLATFORM_ANDROID		1
 
-#elif __linux__
+#elif __linux__ || defined(__MINGW32__) && defined(__MINGW64__)
 
 # define TARGET_PLATFORM_LINUX			1
 
