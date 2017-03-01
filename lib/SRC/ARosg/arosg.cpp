@@ -52,7 +52,7 @@
 #include <osg/TextureRectangle>
 #include <osgDB/FileNameUtils>
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
 #  include <windows.h>
 #  define MAXPATHLEN MAX_PATH
 #else

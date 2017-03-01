@@ -44,10 +44,10 @@
 #include <stdio.h>						// NULL, sprintf()
 #include <time.h>						// ctime(), time_t
 #include <string.h>						// strncpy()
-#if defined(EDEN_UNIX)
+#if defined(EDEN_UNIX) || defined(__MINGW32__) && defined(__MINGW64__)
 #  include <sys/time.h>					// gettimeofday(), struct timeval
 #  include <unistd.h>					// sleep(), usleep()
-#elif defined(_WIN32)
+#elif defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
 #  include <windows.h>					// FILETIME, GetSystemTimeAsFileTime(), <winbase.h> Sleep()
 #elif defined(EDEN_MACOS)
 #  include <Timer.h>					// <CoreServices/CarbonCore/Timer.h> Microseconds()
@@ -59,7 +59,7 @@
 // ============================================================================
 //	Private defines
 // ============================================================================
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
 #  define FILETIME_TO_EPOCH_OFFSET (((LONGLONG)27111902 << 32) + (LONGLONG)3577643008)
 #endif // _WIN32
 
@@ -83,9 +83,9 @@
 //
 double EdenTimeInSeconds(void)
 {
-#if defined(EDEN_UNIX)
+#if defined(EDEN_UNIX) || defined(__MINGW32__) && defined(__MINGW64__)
 	struct timeval tv;  // Seconds and microseconds since Jan 1, 1970.
-#elif defined(_WIN32)
+#elif defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
 	FILETIME ft;	// Hundreds of nanoseconds since Jan 1, 1601.
 #elif defined(EDEN_MACOS)
 	UnsignedWide _time;
@@ -94,10 +94,10 @@ double EdenTimeInSeconds(void)
 #endif
 
 	
-#if defined(EDEN_UNIX)
+#if defined(EDEN_UNIX) || defined(__MINGW32__) && defined(__MINGW64__)
 	gettimeofday(&tv, NULL);
 	return ((double)tv.tv_sec + (double)tv.tv_usec * 0.000001);
-#elif defined(_WIN32)
+#elif defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
 	GetSystemTimeAsFileTime(&ft);
 	return ((double)(*((LONGLONG *)&ft) - FILETIME_TO_EPOCH_OFFSET) * 0.0000001);
 #elif defined(EDEN_MACOS)
@@ -119,20 +119,20 @@ double EdenTimeInSeconds(void)
 void EdenTimeAbsolutePlusOffset(struct timespec *result, const long microseconds)
 {
 	long overflow;
-#if defined(EDEN_UNIX)
+#if defined(EDEN_UNIX) || defined(__MINGW32__) && defined(__MINGW64__)
 	struct timeval tv;  // Seconds and microseconds elapsed since Jan 1, 1970.
-#elif defined(_WIN32)
+#elif defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
 	FILETIME ft;	// Number of hundred-nanosecond intervals elapsed since Jan 1, 1601.
 	LONGLONG epocht; // Number of hundred-nanosecond intervals elapsed since Jan 1, 1970.
 #else
 #  error "Don't know how to get the time on this platform."
 #endif
 	
-#if defined(EDEN_UNIX)
+#if defined(EDEN_UNIX) || defined(__MINGW32__) && defined(__MINGW64__)
 	gettimeofday(&tv, NULL);
 	result->tv_sec = (long)tv.tv_sec;
 	result->tv_nsec = ((long)tv.tv_usec + microseconds) * 1000l;
-#elif defined(_WIN32)
+#elif defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
 	GetSystemTimeAsFileTime(&ft);
 	epocht = *((LONGLONG *)&ft) - FILETIME_TO_EPOCH_OFFSET;
 	result->tv_sec = (long)(epocht / (LONGLONG)10000000l); // 10e6.
@@ -152,11 +152,11 @@ void EdenTimeAbsolutePlusOffset(struct timespec *result, const long microseconds
 char *EdenTimeInSecondsToText(const double seconds, char s[25])
 {
 	static char buf[64];
-#if defined(EDEN_UNIX) || defined(_WIN32)
+#if defined(EDEN_UNIX) || defined(_WIN32) || defined(__MINGW32__) && defined(__MINGW64__)
 	time_t time;
 #endif
 
-#if defined(EDEN_UNIX) || defined(_WIN32)
+#if defined(EDEN_UNIX) || defined(_WIN32) || defined(__MINGW32__) && defined(__MINGW64__)
 	// Get 24-char-wide time & date string, plus \n and \0 for total of 26 bytes.
 	time = (time_t)seconds; // Truncate to integer.
 #ifdef EDEN_HAVE_CTIME_R_IN_TIME_H
@@ -178,9 +178,9 @@ char *EdenTimeInSecondsToText(const double seconds, char s[25])
 #ifndef _WINRT
 void EdenTime_usleep(const unsigned int microseconds)
 {
-#if defined(EDEN_UNIX)
+#if defined(EDEN_UNIX) || defined(__MINGW32__) && defined(__MINGW64__)
 	usleep(microseconds);
-#elif defined(_WIN32)
+#elif defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
 	Sleep((DWORD)(microseconds/1000u));
 #elif defined(EDEN_MACOS)
 	UInt32 finalCount;
@@ -193,9 +193,9 @@ void EdenTime_usleep(const unsigned int microseconds)
 
 void EdenTime_sleep(const unsigned int seconds)
 {
-#if defined(EDEN_UNIX)
+#if defined(EDEN_UNIX) || defined(__MINGW32__) && defined(__MINGW64__)
 	sleep(seconds);
-#elif defined(_WIN32)
+#elif defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
 	Sleep((DWORD)(seconds*1000u));
 #elif defined(EDEN_MACOS)
 	UInt32 finalCount;

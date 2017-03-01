@@ -75,6 +75,10 @@
 #endif
 #define PAGES_MAX 64
 
+#if defined(__MINGW32__) && defined(__MINGW64__)
+#  define M_PI_4 0.785398
+#endif
+
 /**
  * Wrapper for ARToolKit functionality. This class handles ARToolKit initialisation, updates,
  * and cleanup. It maintains a collection of markers, providing methods to add and remove them.

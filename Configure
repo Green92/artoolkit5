@@ -107,7 +107,7 @@ VERSION=`grep -E 'AR_HEADER_VERSION_STRING[[:space:]]+"[0-9]+\.[0-9]+(\.[0-9]+)*
 
 E=`uname`
 MACHINE=`uname -m`
-if [ "$E" = "Linux" ]
+if [ "$E" = "Linux" ] || [ "$E" = "MINGW64_NT-6.1" ]
 then
     SYSTEM="linux-$MACHINE"
     echo "\nThis script configures ARToolKit libraries, utilities and examples. For details on dependencies and further information please visit http://artoolkit.org/documentation/doku.php?id=8_Advanced_Topics:build_artoolkit \n\n"
@@ -384,7 +384,8 @@ then
     AR="ar"
     ARFLAGS="rs"
     RANLIB="true"
-    LIBS="-lglut -lGLU -lGL -lX11 -lm -lpthread -ljpeg"
+    #LIBS="-lfreeglut -lGLU -lGL -lX11 -lm -lpthread -ljpeg"
+    LIBS="-lfreeglut -lglu32 -lopengl32 -lm -lpthread -ljpeg"
 
     if [ "$INPUT_GSTREAMER" = "y" ]
     then

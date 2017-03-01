@@ -84,7 +84,7 @@ $(OBJS_OBJC): $(HEADERS)
 $(OBJS): $(HEADERS)
 
 $(TARGET): $(OBJS) $(OBJS_OBJC)
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -shared -o $@ $(OBJS) $(LIBS)
+	$(CXX) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -shared -o $@ $(OBJS) $(LIBS)
 
 clean:
 	-rm -f $(OBJS)
