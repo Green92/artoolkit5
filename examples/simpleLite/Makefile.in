@@ -51,6 +51,7 @@ LIB_DIR= ../../lib
 BIN_DIR= ../../bin
 
 CC=@CC@
+CXX=@CXX@
 LDFLAG=@LDFLAG@ -L$(LIB_DIR)/@SYSTEM@ -L$(LIB_DIR)
 LIBS= -lARgsub_lite -lARvideo -lAR -lARICP -lAR @LIBS@
 CFLAG= @CFLAG@ -I$(INC_DIR)
@@ -61,7 +62,7 @@ HEADERS =
 all: $(BIN_DIR)/simpleLite
 
 $(BIN_DIR)/simpleLite: simpleLite.o $(OBJS)
-	$(CC) -o $(BIN_DIR)/simpleLite simpleLite.o $(OBJS) $(LDFLAG) $(LIBS)
+	$(CXX) -o $(BIN_DIR)/simpleLite simpleLite.o $(OBJS) $(LDFLAG) $(LIBS)
 
 simpleLite.o: simpleLite.c $(HEADERS)
 	$(CC) -c $(CFLAG) simpleLite.c

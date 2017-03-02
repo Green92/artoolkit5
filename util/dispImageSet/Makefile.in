@@ -41,6 +41,7 @@ AR2_LIB_DIR= $(AR2_HOME)/lib
 BIN_DIR= ../../bin
 
 CC= @CC@
+CXX= @CXX@
 CFLAG= @CFLAG@ -I$(AR2_INC_DIR)
 LDFLAG= @LDFLAG@ -L$(AR2_LIB_DIR)/@SYSTEM@ -L$(AR2_LIB_DIR)
 LIBS= -lAR2 -lARvideo -lARgsub -lAR -lARICP -lAR @LIBS@ -ljpeg
@@ -52,7 +53,7 @@ HEADDERS =
 all: $(BIN_DIR)/dispImageSet
 
 $(BIN_DIR)/dispImageSet: dispImageSet.o $(OBJS)
-	${CC} -o $(BIN_DIR)/dispImageSet dispImageSet.o $(OBJS) $(LDFLAG) $(LIBS)
+	${CXX} -o $(BIN_DIR)/dispImageSet dispImageSet.o $(OBJS) $(LDFLAG) $(LIBS)
 
 dispImageSet.o: dispImageSet.c $(HEADDERS)
 	${CC} -c $(CFLAG) dispImageSet.c

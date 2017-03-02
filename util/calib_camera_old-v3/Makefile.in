@@ -38,7 +38,7 @@ INC_DIR= ../../include
 LIB_DIR= ../../lib
 BIN_DIR= ../../bin
 
-CC=@CC@
+CXX=@CXX@
 LDFLAG=@LDFLAG@ -L$(LIB_DIR)/@SYSTEM@ -L$(LIB_DIR)
 LIBS= -lARgsub -lARvideo -lAR -lARICP -lAR @LIBS@
 CFLAG= @CFLAG@ -I$(INC_DIR)
@@ -47,17 +47,17 @@ CFLAG= @CFLAG@ -I$(INC_DIR)
 all: $(BIN_DIR)/calib_camera_old-v3
 
 $(BIN_DIR)/calib_camera_old-v3: main.o calib_dist.o calib_inp.o
-	${CC} -o $(BIN_DIR)/calib_camera_old-v3 main.o calib_dist.o calib_inp.o\
+	${CXX} -o $(BIN_DIR)/calib_camera_old-v3 main.o calib_dist.o calib_inp.o\
 	   $(LDFLAG) $(LIBS)
 
 main.o: main.c calib_camera.h
-	${CC} -c $(CFLAG) main.c
+	${CXX} -c $(CFLAG) main.c
 
 calib_dist.o: calib_dist.c calib_camera.h
-	${CC} -c $(CFLAG) calib_dist.c
+	${CXX} -c $(CFLAG) calib_dist.c
 
 calib_inp.o: calib_inp.c calib_camera.h
-	${CC} -c $(CFLAG) calib_inp.c
+	${CXX} -c $(CFLAG) calib_inp.c
 
 clean:
 	rm -f main.o calib_dist.o calib_inp.o

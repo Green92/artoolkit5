@@ -41,6 +41,7 @@ AR2_LIB_DIR= $(AR2_HOME)/lib
 BIN_DIR= ../../bin
 
 CC= @CC@
+CXX= @CXX@
 CFLAG= @CFLAG@ -I$(AR2_INC_DIR)
 LDFLAG= @LDFLAG@ -L$(AR2_LIB_DIR)/@SYSTEM@ -L$(AR2_LIB_DIR)
 LIBS= -lAR2 -lARvideo -lARgsub -lAR -lARICP -lAR @LIBS@
@@ -52,7 +53,7 @@ HEADDERS =
 all: $(BIN_DIR)/genMarkerSet
 
 $(BIN_DIR)/genMarkerSet: genMarkerSet.o $(OBJS)
-	${CC} -o $(BIN_DIR)/genMarkerSet genMarkerSet.o $(OBJS) $(LDFLAG) $(LIBS)
+	${CXX} -o $(BIN_DIR)/genMarkerSet genMarkerSet.o $(OBJS) $(LDFLAG) $(LIBS)
 
 genMarkerSet.o: genMarkerSet.c $(HEADDERS)
 	${CC} -c $(CFLAG) genMarkerSet.c

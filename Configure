@@ -64,6 +64,7 @@ MDIR=".                              \
       lib/SRC/VideoQuickTime         \
       lib/SRC/VideoQuickTime7        \
       lib/SRC/VideoGStreamer         \
+      lib/SRC/VideoWinDS             \
       lib/SRC/ARosg                  \
       lib/SRC/Eden                   \
       util                           \
@@ -341,6 +342,42 @@ then
         fi
     fi
 
+    if [ "$E" = "MINGW64_NT-6.1" ]
+    then
+        echo "Do you want to enable Window Direct Show input device ? (y or n)"
+        echo -n "Enter : "
+         read ANS
+        if [ "$ANS" = "y" ]
+        then
+            INPUT_WIN_DS="y"
+        elif [ "$ANS" = "n" ]
+        then
+            INPUT_WIN_DS="n"
+        else
+            echo "Please enter y or n."
+            exit 0
+        fi
+        if [ "$INPUT_WIN_DS" = "y" ]
+        then
+            if [ "$DEFAULT_CAP_DEVICE" = "" ]
+            then
+                echo "Do you want to use it as the default input device? (y or n)"
+                echo -n "Enter : "
+                read ANS
+                if [ "$ANS" = "y" ]
+                then
+                    DEFAULT_CAP_DEVICE="WIN_DS"
+                elif [ "$ANS" = "n" ]
+                then
+                    DEFAULT_CAP_DEVICE=""
+                else
+                    echo "Please enter y or n."
+                    exit 0
+                fi
+            fi
+        fi
+    fi
+
 
     if [ "$CLANGCC" = "y" ]
     then
@@ -400,6 +437,12 @@ then
         CFLAG="$CFLAG $GST_CFLAGS"
         LIBS="$LIBS $GST_LIBS"
     fi
+
+    if [ "$INPUT_WIN_DS" = "y" ]
+    then
+        LIBS="$LIBS -lStrmiids -lole32 -loleaut32 -luuid -lgdi32"
+    fi
+
     if [ "$INPUT_CAM1394" = "y" ]
     then
         if [ "$DC1394_V2" = "y" ]
@@ -693,6 +736,13 @@ s/#(cd VideoGStreamer;    make -f Makefile)/(cd VideoGStreamer;    make -f Makef
 EOF
 fi
 
+if [ "$INPUT_GSTREAMER" = "y" ]
+then
+cat >> $SED <<EOF
+s/#(cd VideoWinDS;    make -f Makefile)/(cd VideoWinDS;    make -f Makefile)/
+EOF
+fi
+
 if [ "$INPUT_SGI" = "y" ]
 then
 cat >> $SED <<EOF
@@ -819,6 +869,13 @@ s/#undef  AR_INPUT_GSTREAMER/#define AR_INPUT_GSTREAMER/
 EOF
 fi
 
+if [ "$INPUT_WIN_DS" = "y" ]
+then
+cat >> $SED <<EOF
+s/#undef  AR_INPUT_WINDOWS_DIRECTSHOW/#define AR_INPUT_WINDOWS_DIRECTSHOW/
+EOF
+fi
+
 if [ "$INPUT_IMAGE" = "y" ]
 then
 cat >> $SED <<EOF
@@ -857,6 +914,11 @@ elif [ "$DEFAULT_CAP_DEVICE" = "GSTREAMER" ]
 then
 cat >> $SED <<EOF
 s/#undef  AR_DEFAULT_INPUT_GSTREAMER/#define AR_DEFAULT_INPUT_GSTREAMER/
+EOF
+elif [ "$DEFAULT_CAP_DEVICE" = "WIN_DS" ]
+then
+cat >> $SED <<EOF
+s/#undef  AR_DEFAULT_INPUT_WINDOWS_DIRECTSHOW/#define  AR_DEFAULT_INPUT_WINDOWS_DIRECTSHOW/
 EOF
 elif [ "$E" = "Linux" ]
 then

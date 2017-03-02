@@ -270,8 +270,8 @@ static void init(int argc, char *argv[])
     argViewportSetDispMethod( vpL, AR_GL_DISP_METHOD_TEXTURE_MAPPING_FRAME );
     argViewportSetDispMethod( vpR, AR_GL_DISP_METHOD_TEXTURE_MAPPING_FRAME );
 
-    arSetPixelFormat( arHandleL, pixelFormatL );
-    arSetPixelFormat( arHandleR, pixelFormatR );
+    arSetPixelFormat( arHandleL, (AR_PIXEL_FORMAT) pixelFormatL );
+    arSetPixelFormat( arHandleR, (AR_PIXEL_FORMAT) pixelFormatR );
     arSetImageProcMode( arHandleL, AR_IMAGE_PROC_FRAME_IMAGE );
     arSetImageProcMode( arHandleR, AR_IMAGE_PROC_FRAME_IMAGE );
     arSetPatternDetectionMode( arHandleL, AR_MATRIX_CODE_DETECTION );

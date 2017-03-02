@@ -34,29 +34,56 @@
 #  Author(s): Hirokazu Kato, Philip Lamb
 #
 
-INC_DIR= ../../include
-LIB_DIR= ../../lib
-BIN_DIR= ../../bin
-
+#
+# For instalation. Change this to your settings.
+#
+INC_DIR = ../../../include
+LIB_DIR = ../..
+#
+#  compiler
+#
+CC= @CC@
 CXX=@CXX@
-LDFLAG=@LDFLAG@ -L$(LIB_DIR)/@SYSTEM@ -L$(LIB_DIR)
-LIBS= -lARgsub_lite -lARMulti -lARvideo -lAR -lARICP -lAR @LIBS@
-CFLAG= @CFLAG@ -I$(INC_DIR)
+CXXFLAGS= @CFLAG@ -I$(INC_DIR)
+#
+# For making the library
+#
+AR=@AR@
+ARFLAGS=@ARFLAGS@
+LIBS= -lole32 -loleaut32 -lStrmiids -luuid @LIBS@
+#
+#   products
+#
+LIB= ${LIB_DIR}/libARvideo.a
+INCLUDE= ${INC_DIR}/AR/config.h       \
+         ${INC_DIR}/AR/arConfig.h     \
+         ${INC_DIR}/AR/video.h        \
+         ${INC_DIR}/AR/videoConfig.h  \
+         ${INC_DIR}/AR/sys/videoWindowsDirectShow.h
 
+#
+#   compilation control
+#
+LIBOBJS= ${LIB}(videoWinDS.o)
 
-all: $(BIN_DIR)/check_id
+all:		${LIBOBJS}
 
+${LIBOBJS}:	${INCLUDE}
 
-$(BIN_DIR)/check_id: check_id.c
-	${CXX} -o $(BIN_DIR)/check_id $(CFLAG) check_id.c\
-	   $(LDFLAG) $(LIBS)
+.c.a:
+	${CC} -c ${CFLAG} $<
+	${AR} ${ARFLAGS} $@ $*.o
+	rm -f $*.o
 
 clean:
-	rm -f $(BIN_DIR)/check_id
+	rm -f *.o
+	rm -f ${LIB}
 
 allclean:
-	rm -f $(BIN_DIR)/check_id
+	rm -f *.o
+	rm -f ${LIB}
 	rm -f Makefile
 
 distclean:
+	rm -f *.o
 	rm -f Makefile

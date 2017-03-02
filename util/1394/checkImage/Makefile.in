@@ -39,6 +39,7 @@ LIB_DIR= ../../../lib
 BIN_DIR= ../../../bin
 
 CC=@CC@
+CXX=@CXX@
 LDFLAG=@LDFLAG@ -L$(LIB_DIR)/@SYSTEM@ -L$(LIB_DIR)
 LIBS= -lARgsub -lARvideo -lAR -lARICP -lAR @LIBS@
 CFLAG= @CFLAG@ -I$(INC_DIR)
@@ -49,10 +50,10 @@ HEADDERS =
 all: $(BIN_DIR)/checkImage
 
 $(BIN_DIR)/checkImage: checkImage.o $(OBJS)
-	${CC} -o $(BIN_DIR)/checkImage checkImage.o $(OBJS) $(LDFLAG) $(LIBS)
+	${CXX} -o $(BIN_DIR)/checkImage checkImage.o $(OBJS) $(LDFLAG) $(LIBS)
 
 checkImage.o: checkImage.c $(HEADDERS)
-	${CC} -c $(CFLAG) checkImage.c
+	${CXX} -c $(CFLAG) checkImage.c
 
 clean:
 	rm -f *.o

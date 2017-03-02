@@ -55,24 +55,32 @@
 
 #include <windows.h>
 #include <iostream>
-#pragma include_alias( "dxtrans.h", "qedit.h" )
+#  pragma include_alias( "dxtrans.h", "qedit.h" )
 #define __IDxtCompositor_INTERFACE_DEFINED__
 #define __IDxtAlphaSetter_INTERFACE_DEFINED__
 #define __IDxtJpeg_INTERFACE_DEFINED__
 #define __IDxtKey_INTERFACE_DEFINED__
-#include <qedit.h>
+#include "qedit.h"
 #include <stdio.h>
-#include <atlstr.h>
+#if defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
+#  include <atlstr.h>
+#endif
 #include <dshow.h>
 #include <sys/timeb.h>
-#include <videoWinDSPrivate.h>
+#include "videoWinDSPrivate.h"
 #include <comdef.h>
 
 static AR2VideoWinDSDeviceInfoT	*ar2VideoWinDSInit2( void );
 static int                       ar2VideoWinDSFinal2(AR2VideoWinDSDeviceInfoT	**devInfo_p);
 static IPin						*ar2VideoWinDSGetPin(IBaseFilter *pFilter, PIN_DIRECTION PinDir);
 static HRESULT					 ar2VideoWinDSDisplayFilterProperties( IBaseFilter *pFilter );
+
+#if defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
+
 static HRESULT					 ar2VideoWinDSDisplayPinProperties(CComPtr<IPin> pSrcPin);
+
+#endif
+
 static void						 ar2VideoWinDSGetTimeStamp(ARUint32 *t_sec, ARUint32 *t_usec);
 static void						 ar2VideoWinDSFlipImageRGB24(ARUint8 *iBuf, ARUint8 *oBuf, int width, int height, int flipH, int flipV);
 static int						 ar2VideoWinDSShowProperties( AR2VideoParamWinDST *wvid );
@@ -174,7 +182,15 @@ AR2VideoParamWinDST *ar2VideoOpenWinDS( const char *config )
 				showList = 1;
             }
             else if( strcmp( b, "-showDialog" ) == 0 )    {
-				showDialog = 1;
+#if defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
+            	showDialog = 1;
+#elif defined(_WIN32) && (defined(__MINGW32__) || defined(__MINGW64__))
+            	ARLOGe("error: -showDialog switch is disabled on MinGW built distributions \
+            		because it required Microsoft's proprietary ATL Library (Com interoperability).\n");
+            	return NULL;
+#else
+#  error DirectShow is not supported on your plateform.
+#endif
             }
             else if( strcmp( b, "-flipH" ) == 0 )    {
 				flipH = 1;
@@ -199,7 +215,11 @@ AR2VideoParamWinDST *ar2VideoOpenWinDS( const char *config )
 		for( int i = 0; i < ar2VideoWinDSDeviceInfo->devNum; i++ ) {
 			ARLOG("%2d: \"%s\"\n", i+1, ar2VideoWinDSDeviceInfo->devName[i]);
 		}
-        goto bail;
+#if defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
+		goto bail;
+#else
+		return NULL;
+#endif
 	}
 
 	if( devNum == -1 ) {
@@ -209,7 +229,11 @@ AR2VideoParamWinDST *ar2VideoOpenWinDS( const char *config )
 		}
 		if( i == ar2VideoWinDSDeviceInfo->devNum ) {
 			ARLOGe("error: no available devices.\n");
+#if defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
 			goto bail;
+#else
+			return NULL;
+#endif
 		}
 		devNum = i+1;
 	}
@@ -286,7 +310,13 @@ AR2VideoParamWinDST *ar2VideoOpenWinDS( const char *config )
 
 	IPin *pSrcOut  = ar2VideoWinDSGetPin(vid->pVideoCapFilter, PINDIR_OUTPUT);
 	IPin *pSGrabIN = ar2VideoWinDSGetPin(vid->pVideoGrabFilter, PINDIR_INPUT);
+
+#if defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
+
 	if( showDialog == 1 ) ar2VideoWinDSDisplayPinProperties(pSrcOut);
+
+#endif
+
 	hr = ar2VideoWinDSDeviceInfo->pGraph->Connect(pSrcOut, pSGrabIN);
 	if( FAILED(hr) ) {
 		ARLOGe("pGraph->Connect\n");
@@ -614,6 +644,8 @@ static IPin *ar2VideoWinDSGetPin(IBaseFilter *pFilter, PIN_DIRECTION PinDir)
 	return (bFound ? pPin : 0);
 }
 
+#if defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
+
 static HRESULT ar2VideoWinDSDisplayPinProperties(CComPtr<IPin> pSrcPin)
 {
 	CComPtr<ISpecifyPropertyPages> pPages;
@@ -634,6 +666,8 @@ static HRESULT ar2VideoWinDSDisplayPinProperties(CComPtr<IPin> pSrcPin)
 
 	return(S_OK);
 }
+
+#endif
 
 static HRESULT ar2VideoWinDSDisplayFilterProperties( IBaseFilter *pFilter )
 {

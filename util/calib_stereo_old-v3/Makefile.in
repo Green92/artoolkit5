@@ -39,6 +39,7 @@ LIB_DIR= ../../lib
 BIN_DIR= ../../bin
 
 CC=@CC@
+CXX=@CXX@
 LDFLAG=@LDFLAG@ -L$(LIB_DIR)/@SYSTEM@ -L$(LIB_DIR)
 LIBS= -lARgsub -lARvideo -lARMulti -lAR -lARICP -lAR @LIBS@
 CFLAG= @CFLAG@ -I$(INC_DIR)
@@ -47,7 +48,7 @@ CFLAG= @CFLAG@ -I$(INC_DIR)
 all: $(BIN_DIR)/calib_stereo_old-v3
 
 $(BIN_DIR)/calib_stereo_old-v3: calib_stereo.o
-	$(CC) -o $(BIN_DIR)/calib_stereo_old-v3 calib_stereo.o \
+	$(CXX) -o $(BIN_DIR)/calib_stereo_old-v3 calib_stereo.o \
 	   $(LDFLAG) $(LIBS)
 
 calib_stereo.o: calib_stereo.c

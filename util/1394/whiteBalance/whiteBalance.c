@@ -218,7 +218,7 @@ static void   init(int argc, char *argv[])
     if( arVideoGetSize(&xsize, &ysize) < 0 ) exit(0);
     ARLOG("Image size (x,y) = (%d,%d)\n", xsize, ysize);
     if( (pixFormat=arVideoGetPixelFormat()) < 0 ) exit(0);
-    pixSize = arUtilGetPixelSize(pixFormat);
+    pixSize = arUtilGetPixelSize((AR_PIXEL_FORMAT) pixFormat);
                                                                                 
     /* open the graphics window */
     viewport.sx = 0;

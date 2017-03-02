@@ -38,7 +38,7 @@ INC_DIR= ../../../include
 LIB_DIR= ../../../lib
 BIN_DIR= ../../../bin
 
-CC=@CC@
+CXX=@CXX@
 LDFLAG=@LDFLAG@ -L$(LIB_DIR)/@SYSTEM@ -L$(LIB_DIR)
 LIBS= -lARgsub -lARvideo -lAR -lARICP -lAR @LIBS@
 CFLAG= @CFLAG@ -I$(INC_DIR)
@@ -49,10 +49,10 @@ HEADDERS =
 all: $(BIN_DIR)/listCamera
 
 $(BIN_DIR)/listCamera: listCamera.o $(OBJS)
-	${CC} -o $(BIN_DIR)/listCamera listCamera.o $(OBJS) $(LDFLAG) $(LIBS)
+	${CXX} -o $(BIN_DIR)/listCamera listCamera.o $(OBJS) $(LDFLAG) $(LIBS)
 
 listCamera.o: listCamera.c $(HEADDERS)
-	${CC} -c $(CFLAG) listCamera.c
+	${CXX} -c $(CFLAG) listCamera.c
 
 clean:
 	rm -f *.o

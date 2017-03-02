@@ -39,6 +39,7 @@ LIB_DIR= ../../lib
 BIN_DIR= ../../bin
 
 CC=@CC@
+CXX=@CXX@
 LDFLAG=@LDFLAG@ -L$(LIB_DIR)/@SYSTEM@ -L$(LIB_DIR)
 LIBS= -lARgsub_lite -lARvideo -lAR -lARICP -lAR -lEden @LIBS@
 CFLAG= @CFLAG@ -I$(INC_DIR)
@@ -49,7 +50,7 @@ HEADERS = calc_optical.h getInput.h
 all: $(BIN_DIR)/calib_optical
 
 $(BIN_DIR)/calib_optical: $(OBJS)
-	$(CC) -o $(BIN_DIR)/calib_optical $(OBJS) $(LDFLAG) $(LIBS)
+	$(CXX) -o $(BIN_DIR)/calib_optical $(OBJS) $(LDFLAG) $(LIBS)
 
 calib_optical.o: calib_optical.c $(HEADERS)
 	$(CC) -c $(CFLAG) calib_optical.c

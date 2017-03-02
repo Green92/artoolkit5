@@ -243,7 +243,7 @@ static void init(int argc, char *argv[])
         exit(0);
     }
     arSetDebugMode( arHandle, AR_DEBUG_DISABLE );
-    arSetPixelFormat( arHandle, pixelFormat );
+    arSetPixelFormat( arHandle, (AR_PIXEL_FORMAT) pixelFormat );
     arSetImageProcMode( arHandle, AR_IMAGE_PROC_FRAME_IMAGE );
     arSetPatternDetectionMode( arHandle, AR_TEMPLATE_MATCHING_COLOR );
     arSetMarkerExtractionMode( arHandle, AR_NOUSE_TRACKING_HISTORY );
@@ -505,7 +505,7 @@ static void mainLoop(void)
             vertex[i][1] = target->vertex[(i+2)%4][1];
         }
         if( arPattGetImage2( AR_IMAGE_PROC_FRAME_IMAGE, AR_TEMPLATE_MATCHING_COLOR, gPattSize, gPattSize*AR_PATT_SAMPLE_FACTOR1,
-                            buff->buff, cparam.xsize, cparam.ysize, pixelFormat, &(cparamLT->paramLTf),
+                            buff->buff, cparam.xsize, cparam.ysize, (AR_PIXEL_FORMAT) pixelFormat, &(cparamLT->paramLTf),
                             vertex, pattRatio, (ARUint8 *)pattImage ) == 0 ) {
             argDrawMode2D(vp1);
             argDrawImage((ARUint8 *)pattImage);

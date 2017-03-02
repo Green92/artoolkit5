@@ -39,6 +39,7 @@ LIB_DIR= ../../lib
 BIN_DIR= ../../bin
 
 CC=@CC@
+CXX=@CXX@
 LDFLAG=@LDFLAG@ -L$(LIB_DIR)/@SYSTEM@ -L$(LIB_DIR)
 LIBS= -lARgsub -lARvideo -lAR -lARICP -lAR @LIBS@
 CFLAG= @CFLAG@ -I$(INC_DIR)
@@ -48,7 +49,7 @@ all: $(BIN_DIR)/mk_patt
 
 
 $(BIN_DIR)/mk_patt: mk_patt.c
-	${CC} -o $(BIN_DIR)/mk_patt $(CFLAG) mk_patt.c\
+	${CXX} -o $(BIN_DIR)/mk_patt $(CFLAG) mk_patt.c\
 	   $(LDFLAG) $(LIBS)
 
 clean:
