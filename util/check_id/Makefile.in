@@ -39,6 +39,7 @@ LIB_DIR= ../../lib
 BIN_DIR= ../../bin
 
 CXX=@CXX@
+CC=@CC@
 LDFLAG=@LDFLAG@ -L$(LIB_DIR)/@SYSTEM@ -L$(LIB_DIR)
 LIBS= -lARgsub_lite -lARMulti -lARvideo -lAR -lARICP -lAR @LIBS@
 CFLAG= @CFLAG@ -I$(INC_DIR)
@@ -47,16 +48,22 @@ CFLAG= @CFLAG@ -I$(INC_DIR)
 all: $(BIN_DIR)/check_id
 
 
-$(BIN_DIR)/check_id: check_id.c
-	${CXX} -o $(BIN_DIR)/check_id $(CFLAG) check_id.c\
+$(BIN_DIR)/check_id: check_id.o
+	${CXX} -o $(BIN_DIR)/check_id $(CFLAG) check_id.o\
 	   $(LDFLAG) $(LIBS)
 
+check_id.o: check_id.c
+	$(CC) -c $(CFLAG) check_id.c
+
 clean:
+	rm -f *.o
 	rm -f $(BIN_DIR)/check_id
 
 allclean:
+	rm -f *.o
 	rm -f $(BIN_DIR)/check_id
 	rm -f Makefile
 
 distclean:
+	rm -f *.o
 	rm -f Makefile
